@@ -1,0 +1,35 @@
+{
+  "name": "spirala3",
+  "version": "1.0.0",
+  "description": "Projekat za potrebe spirale 3 na predmetu Web tehnologije",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --timeout 3000 -port=8081",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://devlives@bitbucket.org/devlives/wt1951st.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "html",
+    "javascript",
+    "css"
+  ],
+  "author": "Djejlan",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/devlives/wt1951st#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "config": "^3.2.5",
+    "express": "^4.17.1",
+    "mocha": "^7.0.0",
+    "moment": "^2.24.0",
+    "mysql2": "^1.5.1",
+    "optimist": "^0.6.1",
+    "sequelize": "^5.21.3"
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "db": {
+        "name": "DBWT19",
+        "username": "root",
+        "password": "root",
+        "host": "localhost"
+    }
+}

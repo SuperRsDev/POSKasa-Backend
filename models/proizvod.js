@@ -1,8 +1,15 @@
 const Sequelize = require('sequelize');
 
 module.exports = function(sequelize, DataTypes){
-    const Proizvod = sequelize.define('proizvod', {
+    const Product = sequelize.define('product', {
+        name: Sequelize.STRING,
+        stockQuantity: Sequelize.INTEGER,
+        status: Sequelize.STRING,
+        description: Sequelize.STRING,
+        unitPrice: Sequelize.INTEGER,
+        sellingPrice: Sequelize.INTEGER,
+        categoryId: Sequelize.INTEGER
      }, { freezeTableName: true });
 
-    return Proizvod;
+    return Product;
 };

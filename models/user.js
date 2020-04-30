@@ -1,0 +1,37 @@
+const Sequelize = require('sequelize');
+
+module.exports = function(sequelize, DataTypes){
+    const User = sequelize.define('user', {
+        firstName: Sequelize.STRING,
+        lastName: Sequelize.STRING,
+        username: {
+            type: Sequelize.STRING,
+            unique: true
+        },
+        password: {
+            type: Sequelize.STRING,
+            unique: true,
+            allowNull: false
+        },
+        email: Sequelize.STRING,
+        phone: Sequelize.STRING,
+        address: Sequelize.STRING,
+        picture: Sequelize.STRING,
+        birthDate: Sequelize.DATE,
+        loginProvider: Sequelize.STRING
+    },
+    {
+        instanceMethods: {
+            freezeTableName: true,
+
+            generateHash: function (password) {
+                return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
+            },
+            validPassword: function (password) {
+                return bcrypt.compareSync(password, this.password)
+            }
+        }
+    });
+
+    return User;
+};

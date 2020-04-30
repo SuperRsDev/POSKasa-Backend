@@ -25,7 +25,17 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 //import modela
-db.proizvod = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/proizvod.js')));
+db.category = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/category.js')));
+db.employee = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/employee.js')));
+db.order = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/order.js')));
+db.paymentType = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/paymentType.js')));
+db.pos = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/pos.js')));
+db.product = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/product.js')));
+db.productOrder = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/productOrder.js')));
+db.role = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/role.js')));
+db.user = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/user.js')));
+db.userRole = sequelize.import(path.join(__dirname, getBaseModuleOffsetPath('models/userRole.js')));
+
 
 veze.inicializacijaVeza(db);
 

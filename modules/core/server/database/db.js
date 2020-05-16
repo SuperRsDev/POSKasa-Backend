@@ -7,10 +7,10 @@ const baseFolderOffsetPath = '../../../../';
 function getBaseModuleOffsetPath(path) {
     return baseFolderOffsetPath + path;
 }
-
-const sequelize = new Sequelize(config.db.name, config.db.username,  config.db.password, {
-    host: config.db.host,
+const sequelize = new Sequelize('dbnrs_pos20', 'root', '', {
+    host: '127.0.0.1',
     dialect: 'mysql',
+    port: '3308',
     pool: {
         max: 5,
         min: 0,
@@ -19,9 +19,10 @@ const sequelize = new Sequelize(config.db.name, config.db.username,  config.db.p
     },
     logging: false
  });
+
 const db={};
 
-db.Sequelize = Sequelize;  
+db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 //import modela

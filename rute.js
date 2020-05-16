@@ -61,6 +61,46 @@ router.post('/product' , function(req, res)  {
             res.sendStatus(500)});
 });
 
+//PUT ZAHTJEVI
+
+router.put('/user/:id' , function(req, res)  {
+    if ( !req.body.username || !req.body.password )
+        res.json({ error: 'Bad Data' })
+
+    var data = req.body;
+    db.user.update( {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        username: data.username,
+        password: data.password,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        picture: data.picture,
+        birthDate: data.birthDate,
+        loginProvider: data.loginProvider,
+        }, { where: { id: req.params.id } }
+    ).then( () => { res.json({ status : 'User updated!'}) });
+});
+
+
+router.put('/product/:id' , function(req, res)  {
+    if ( !req.body.name || !req.body.stockQuantity || !req.body.unitPrice || !req.body.sellingPrice)
+        res.json({ error: 'Bad Data' })
+
+    var data = req.body;
+    db.product.update( {
+        name: data.name,
+        stockQuantity: data.stockQuantity,
+        status: data.status,
+        description: data.description,
+        unitPrice: data.unitPrice,
+        sellingPrice: data.sellingPrice,
+        categoryId: data.categoryId,
+        }, { where: { id: req.params.id } }
+    ).then( () => { res.json({ status : 'Product updated!'}) });
+});
+
 
 
 module.exports = router;

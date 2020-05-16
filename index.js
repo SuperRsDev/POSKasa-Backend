@@ -4,14 +4,13 @@ bodyParser = require('body-parser'),
 path = require('path'),
 dbSetup = require('./modules/core/server/database/dbSetup'),
 app = express();
-
 const pos = require('./rute');
-app.use('/pos', pos);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', express.static(path.join(__dirname, 'public')));
 
+app.use('/pos', pos);
 
 const port = 8080;
 app.listen(port, () => {

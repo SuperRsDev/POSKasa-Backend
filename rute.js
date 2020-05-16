@@ -1,6 +1,6 @@
 const express = require('express');
-const router = express.Router();
-const db = require('./server/database/db');
+var router = express.Router();
+const db = require('./modules/core/server/database/db');
 
 
 //GET ZAHTJEVI
@@ -22,3 +22,5 @@ router.get('/user/:id' , (req, res) =>  db.user.findOne({
 router.get('/product/:id' , (req, res) =>  db.product.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
+
+module.exports = router;

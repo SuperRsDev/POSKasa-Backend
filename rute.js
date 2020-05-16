@@ -39,4 +39,28 @@ router.delete('/product/:id' , (req, res) => db.product.destroy({
     }).then( () => { res.json({ status : 'Product deleted!'}) })
 );
 
+//POST ZAHTJEVI
+
+router.post('/user' , function(req, res)  {
+    if ( !req.body.username || !req.body.password )
+        res.json({ error: 'Bad Data' })
+
+    db.user.create(req.body)
+        .then( data => { res.send(data) })
+        .catch( function (err) {
+            res.sendStatus(500)});
+});
+
+router.post('/product' , function(req, res)  {
+    if ( !req.body.name || !req.body.stockQuantity || !req.body.unitPrice || !req.body.sellingPrice)
+        res.json({ error: 'Bad Data' })
+
+    db.user.create(req.body)
+        .then( data => { res.send(data) })
+        .catch( function (err) {
+            res.sendStatus(500)});
+});
+
+
+
 module.exports = router;

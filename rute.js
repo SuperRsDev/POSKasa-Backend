@@ -19,8 +19,24 @@ router.get('/user/:id' , (req, res) =>  db.user.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
+router.get('/employee/:id' , (req, res) =>  db.employee.findOne({
+    where: { id: req.params.id }}).then( data => { res.send(data)})
+);
+
 router.get('/product/:id' , (req, res) =>  db.product.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
+);
+
+//DELETE ZAHTJEVI
+
+router.delete('/user/:id' , (req, res) => db.user.destroy({
+        where: {   id: req.params.id     }
+    }).then( () => { res.json({ status : 'User deleted!'}) })
+);
+
+router.delete('/product/:id' , (req, res) => db.product.destroy({
+        where: {   id: req.params.id     }
+    }).then( () => { res.json({ status : 'Product deleted!'}) })
 );
 
 module.exports = router;

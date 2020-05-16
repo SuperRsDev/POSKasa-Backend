@@ -61,6 +61,14 @@ router.post('/product' , function(req, res)  {
             res.sendStatus(500)});
 });
 
+router.post('/pos' , function(req, res)  {
+
+    db.pos.create(req.body)
+        .then( data => { res.send(data) })
+        .catch( function (err) {
+            res.sendStatus(500)});
+});
+
 //PUT ZAHTJEVI
 
 router.put('/user/:id' , function(req, res)  {

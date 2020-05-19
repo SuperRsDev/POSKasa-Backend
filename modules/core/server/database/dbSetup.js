@@ -118,14 +118,6 @@ function inicializacija(){
             productId: 2,
             quantity: 2,
         })
-            .then(function(user) {
-            // you can now access the newly created user
-            console.log('success', user.toJSON());
-            })
-            .catch(function(err) {
-                // print the error details
-                console.log(err, request.body);
-            })
     ];
 
 
@@ -149,9 +141,10 @@ function inicializacija(){
             .then(() => Promise.all(productOrderPromise).then(all => resolve(all)))
             .then(() => Promise.all(posPromise).then(all => resolve(all)))
             .catch(reason => reject(reason));
+        resolve();
     });
 }
 
 exports.sinhronizacija = sinhronizacija;
 exports.inicializacija = inicializacija;
-exports.sinhronizacijaBezInicijalizacije = sinhronizacijaBezInicijalizacije;
+//exports.sinhronizacijaBezInicijalizacije = sinhronizacijaBezInicijalizacije;

@@ -28,9 +28,8 @@ module.exports = function(sequelize, DataTypes){
         loginProvider: Sequelize.STRING
     },
     {
+        freezeTableName: true,
         instanceMethods: {
-            freezeTableName: true,
-
             generateHash: function (password) {
                 return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
             },

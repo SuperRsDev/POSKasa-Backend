@@ -4,16 +4,16 @@ const db = require('./modules/core/server/database/db');
 
 
 //GET ZAHTJEVI
-router.get('/category', (req, res) => db.category.findAll().then(category => res.json(category)));
-router.get('/employee', (req, res) => db.employee.findAll().then(employee => res.json(employee)));
-router.get('/order', (req, res) => db.order.findAll().then(order => res.json(order)));
-router.get('/paymentType', (req, res) => db.paymentType.findAll().then(paymentType => res.json(paymentType)));
+router.get('/categories', (req, res) => db.category.findAll().then(category => res.json(category)));
+router.get('/employees', (req, res) => db.employee.findAll().then(employee => res.json(employee)));
+router.get('/orders', (req, res) => db.order.findAll().then(order => res.json(order)));
+router.get('/paymentTypes', (req, res) => db.paymentType.findAll().then(paymentType => res.json(paymentType)));
 router.get('/pos', (req, res) => db.pos.findAll().then(pos => res.json(pos)));
-router.get('/product', (req, res) => db.product.findAll().then(product => res.json(product)));
-router.get('/productOrder', (req, res) => db.productOrder.findAll().then(productOrder => res.json(productOrder)));
-router.get('/role', (req, res) => db.role.findAll().then(role => res.json(role)));
-router.get('/user', (req, res) => db.user.findAll().then(user => res.json(user)));
-router.get('/userRole', (req, res) => db.userRole.findAll().then(userRole => res.json(userRole)));
+router.get('/products', (req, res) => db.product.findAll().then(product => res.json(product)));
+router.get('/productOrders', (req, res) => db.productOrder.findAll().then(productOrder => res.json(productOrder)));
+router.get('/roles', (req, res) => db.role.findAll().then(role => res.json(role)));
+router.get('/users', (req, res) => db.user.findAll().then(user => res.json(user)));
+router.get('/userRoles', (req, res) => db.userRole.findAll().then(userRole => res.json(userRole)));
 
 router.get('/user/:id' , (req, res) =>  db.user.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
@@ -41,6 +41,11 @@ router.delete('/user/:id' , (req, res) => db.user.destroy({
 router.delete('/product/:id' , (req, res) => db.product.destroy({
         where: {   id: req.params.id     }
     }).then( () => { res.json({ status : 'Product deleted!'}) })
+);
+
+router.delete('/category/:name' , (req, res) => db.category.destroy({
+        where: {   name: req.params.name     }
+    }).then( () => { res.json({ status : 'Category deleted!'}) })
 );
 
 //POST ZAHTJEVI

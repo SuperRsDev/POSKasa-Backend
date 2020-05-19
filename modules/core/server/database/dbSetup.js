@@ -1,4 +1,6 @@
 const db = require('./db.js');
+const bcrypt = require('bcrypt');
+
 
 function sinhronizacijaBezInicijalizacije() {
     return db.sequelize.sync({force: true});
@@ -15,12 +17,14 @@ function sinhronizacija(){
 }
 
 function inicializacija(){
+    let hash = bcrypt.hashSync('amraamra', 10);
+
     var userPromise=[ db.user.create(
         {
             firstName: 'Amra',
             lastName: 'Pozegija',
             username: 'apozegija1',
-            password: 'amraamra',
+            password: hash,
             email: 'apozegija1@etf.unsa.ba',
             phone: '061111111',
             address: 'Zmaja od Bosne bb',
@@ -131,7 +135,9 @@ function inicializacija(){
 
     return new Promise((resolve, reject) => {
         Promise.all(userPromise)
-            .then(() => Promise.all(rolePromise).then(all => resolve(all)))
+            .then(() => Promise.all(rolePromise).then(all => {
+                resolve(all)
+            }))
             .then(() => Promise.all(userRolePromise).then(all => resolve(all)))
             .then(() => Promise.all(categoryPromise).then(all => resolve(all)))
             .then(() => Promise.all(productPromise).then(all => resolve(all)))
@@ -141,7 +147,6 @@ function inicializacija(){
             .then(() => Promise.all(productOrderPromise).then(all => resolve(all)))
             .then(() => Promise.all(posPromise).then(all => resolve(all)))
             .catch(reason => reject(reason));
-        resolve();
     });
 }
 

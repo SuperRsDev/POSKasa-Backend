@@ -27,6 +27,10 @@ router.get('/product/:id' , (req, res) =>  db.product.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
+router.get('/category/:name' , (req, res) =>  db.category.findOne({
+    where: { name: req.params.name }}).then( data => { res.send(data)})
+);
+
 //DELETE ZAHTJEVI
 
 router.delete('/user/:id' , (req, res) => db.user.destroy({
@@ -64,6 +68,16 @@ router.post('/product' , function(req, res)  {
 router.post('/pos' , function(req, res)  {
 
     db.pos.create(req.body)
+        .then( data => { res.send(data) })
+        .catch( function (err) {
+            res.sendStatus(500)});
+});
+
+router.post('/category' , function(req, res)  {
+    if ( !req.body.name )
+        res.json({ error: 'Bad Data' })
+
+    db.category.create(req.body)
         .then( data => { res.send(data) })
         .catch( function (err) {
             res.sendStatus(500)});

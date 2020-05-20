@@ -75,6 +75,7 @@ router.post('/user' , function(req, res)  {
             res.sendStatus(500)});
 });
 
+
 router.post('/product' , function(req, res)  {
     if ( !req.body.name || !req.body.stockQuantity || !req.body.unitPrice || !req.body.sellingPrice)
         res.json({ error: 'Bad Data' })
@@ -103,6 +104,15 @@ router.post('/category' , function(req, res)  {
             res.sendStatus(500)});
 });
 
+router.post('/order' , function(req, res)  {
+    if ( !req.body.employeeId || !req.body.date )
+        res.json({ error: 'Bad Data' })
+
+    db.order.create(req.body)
+        .then( data => { res.send(data) })
+        .catch( function (err) {
+            res.sendStatus(500)});
+});
 //PUT ZAHTJEVI
 
 router.put('/user/:id' , function(req, res)  {

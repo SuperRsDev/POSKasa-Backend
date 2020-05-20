@@ -41,6 +41,11 @@ router.get('/paymentType/:id' , (req, res) =>  db.paymentType.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
+
+router.get('/order/:id' , (req, res) =>  db.order.findOne({
+    where: { id: req.params.id }}).then( data => { res.send(data)})
+);
+
 //DELETE ZAHTJEVI
 
 router.delete('/user/:id' , (req, res) => db.user.destroy({

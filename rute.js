@@ -15,6 +15,11 @@ router.get('/roles', (req, res) => db.role.findAll().then(role => res.json(role)
 router.get('/users', (req, res) => db.user.findAll().then(user => res.json(user)));
 router.get('/userRoles', (req, res) => db.userRole.findAll().then(userRole => res.json(userRole)));
 
+//dohvaća subtotale, tj  - sve narudžbe proizvoda i njihove količine koji odgovaraju narudžbi sa prosljeđenim id-em
+router.get('/subTotals/:orderId', (req, res) =>  db.productOrder.findAll({
+    where: { orderId: req.params.orderId }}).then( data => { res.send(data)})
+);
+
 router.get('/user/:id' , (req, res) =>  db.user.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
@@ -27,8 +32,8 @@ router.get('/product/:id' , (req, res) =>  db.product.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
-router.get('/category/:name' , (req, res) =>  db.category.findOne({
-    where: { name: req.params.name }}).then( data => { res.send(data)})
+router.get('/category/:id' , (req, res) =>  db.category.findOne({
+    where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
 //DELETE ZAHTJEVI
@@ -43,8 +48,8 @@ router.delete('/product/:id' , (req, res) => db.product.destroy({
     }).then( () => { res.json({ status : 'Product deleted!'}) })
 );
 
-router.delete('/category/:name' , (req, res) => db.category.destroy({
-        where: {   name: req.params.name     }
+router.delete('/category/:id' , (req, res) => db.category.destroy({
+        where: {   id: req.params.id     }
     }).then( () => { res.json({ status : 'Category deleted!'}) })
 );
 

@@ -17,14 +17,13 @@ function sinhronizacija(){
 }
 
 function inicializacija(){
-    let hash = bcrypt.hashSync('amraamra', 10);
 
     var userPromise=[ db.user.create(
         {
             firstName: 'Amra',
             lastName: 'Pozegija',
             username: 'apozegija1',
-            password: hash,
+            password: 'amraamra',
             email: 'apozegija1@etf.unsa.ba',
             phone: '061111111',
             address: 'Zmaja od Bosne bb',
@@ -108,7 +107,15 @@ function inicializacija(){
             date: '19.5.2020',
             status: '',
             orderType: ''
-        })
+        }),
+        db.order.create({
+            employeeId: 1,
+            paymentTypeId: 1,
+            date: '19.5.2020',
+            status: '',
+            orderType: ''
+        }),
+
     ];
 
     var productOrderPromise = [
@@ -119,6 +126,11 @@ function inicializacija(){
         }),
         db.productOrder.create({
             orderId: 1,
+            productId: 2,
+            quantity: 2,
+        }),
+        db.productOrder.create({
+            orderId: 2,
             productId: 2,
             quantity: 2,
         })

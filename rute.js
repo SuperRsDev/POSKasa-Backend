@@ -1,6 +1,7 @@
 const express = require('express');
 var router = express.Router();
 const db = require('./modules/core/server/database/db');
+const { QueryTypes } = require('sequelize');
 
 
 //                              GET ZAHTJEVI
@@ -26,6 +27,10 @@ router.get('/user/:id' , (req, res) =>  db.user.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
+router.get('/user/:username/:password' , (req, res) =>  db.user.findOne({
+    where: {   username: req.params.username, password: req.params.password }}).then( data => { res.send(data)})
+);
+
 router.get('/employee/:id' , (req, res) =>  db.employee.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
@@ -48,6 +53,17 @@ router.get('/paymentType/:id' , (req, res) =>  db.paymentType.findOne({
 
 router.get('/order/:id' , (req, res) =>  db.order.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
+);
+
+//GET role for specific user
+//select * from role, user where role.id = user.id and user.username = ?
+
+router.get('/userrole/:username/' , async function(req, res) {
+        const data = await db.sequelize.query('SELECT role.name FROM role, userrole, user WHERE userrole.roleId = role.id AND userrole.userId = user.id AND user.username = ?', {
+            replacements: [req.params.username], type: db.sequelize.QueryTypes.SELECT
+        });
+        res.send(data);
+    }
 );
 
 //                              DELETE ZAHTJEVI

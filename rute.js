@@ -20,6 +20,8 @@ router.get('/subTotals/:orderId', (req, res) =>  db.productOrder.findAll({
     where: { orderId: req.params.orderId }}).then( data => { res.send(data)})
 );
 
+// GET /:id ZAHTJEVI
+
 router.get('/user/:id' , (req, res) =>  db.user.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
@@ -36,11 +38,9 @@ router.get('/category/:id' , (req, res) =>  db.category.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
-
 router.get('/paymentType/:id' , (req, res) =>  db.paymentType.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
-
 
 router.get('/order/:id' , (req, res) =>  db.order.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
@@ -75,25 +75,6 @@ router.post('/user' , function(req, res)  {
             res.sendStatus(500)});
 });
 
-
-router.post('/product' , function(req, res)  {
-    if ( !req.body.name || !req.body.stockQuantity || !req.body.unitPrice || !req.body.sellingPrice)
-        res.json({ error: 'Bad Data' })
-
-    db.user.create(req.body)
-        .then( data => { res.send(data) })
-        .catch( function (err) {
-            res.sendStatus(500)});
-});
-
-router.post('/pos' , function(req, res)  {
-
-    db.pos.create(req.body)
-        .then( data => { res.send(data) })
-        .catch( function (err) {
-            res.sendStatus(500)});
-});
-
 router.post('/category' , function(req, res)  {
     if ( !req.body.name )
         res.json({ error: 'Bad Data' })
@@ -113,12 +94,52 @@ router.post('/order' , function(req, res)  {
         .catch( function (err) {
             res.sendStatus(500)});
 });
+
+//paymentType - definisano prije - nije podložno izmjenama od strane korisnika
+
+router.post('/pos' , function(req, res)  {
+
+    db.pos.create(req.body)
+        .then( data => { res.send(data) })
+        .catch( function (err) {
+            res.sendStatus(500)});
+});
+
+router.post('/product' , function(req, res)  {
+    if ( !req.body.name || !req.body.stockQuantity || !req.body.unitPrice || !req.body.sellingPrice)
+        res.json({ error: 'Bad Data' })
+
+    db.product.create(req.body)
+        .then( data => { res.send(data) })
+        .catch( function (err) {
+            res.sendStatus(500)});
+});
+
+router.post('/productOrder' , function(req, res)  {
+    if ( !req.body.productId || !req.body.orderId || !req.body.quantity )
+        res.json({ error: 'Bad Data' })
+
+    db.productOrder.create(req.body)
+        .then( data => { res.send(data) })
+        .catch( function (err) {
+            res.sendStatus(500)});
+});
+
+//role - definisano prije - nije podložno izmjenama od strane korisnika
+
+router.post('/userRole' , function(req, res)  {
+    if ( !req.body.roleId || !req.body.userId )
+        res.json({ error: 'Bad Data' })
+
+    db.userRole.create(req.body)
+        .then( data => { res.send(data) })
+        .catch( function (err) {
+            res.sendStatus(500)});
+});
+
 //PUT ZAHTJEVI
 
 router.put('/user/:id' , function(req, res)  {
-    if ( !req.body.username || !req.body.password )
-        res.json({ error: 'Bad Data' })
-
     var data = req.body;
     db.user.update( {
         firstName: data.firstName,
@@ -135,11 +156,7 @@ router.put('/user/:id' , function(req, res)  {
     ).then( () => { res.json({ status : 'User updated!'}) });
 });
 
-
 router.put('/product/:id' , function(req, res)  {
-    if ( !req.body.name || !req.body.stockQuantity || !req.body.unitPrice || !req.body.sellingPrice)
-        res.json({ error: 'Bad Data' })
-
     var data = req.body;
     db.product.update( {
         name: data.name,
@@ -152,7 +169,5 @@ router.put('/product/:id' , function(req, res)  {
         }, { where: { id: req.params.id } }
     ).then( () => { res.json({ status : 'Product updated!'}) });
 });
-
-
 
 module.exports = router;

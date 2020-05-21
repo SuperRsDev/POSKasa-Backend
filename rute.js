@@ -38,7 +38,7 @@ router.get('/category/:id' , (req, res) =>  db.category.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
-router.get('/category/:name' , (req, res) =>  db.category.findOne({
+router.get('/categories/:name' , (req, res) =>  db.category.findOne({
     where: { name: req.params.name }}).then( data => { res.send(data)})
 );
 

@@ -9,7 +9,10 @@ module.exports = function(sequelize, DataTypes){
             allowNull: false,
             autoIncrement: true
         },
-        name: Sequelize.STRING,
+        name: {
+            type: Sequelize.STRING,
+            unique: true
+        },
         description: Sequelize.STRING
     }, { freezeTableName: true });
 

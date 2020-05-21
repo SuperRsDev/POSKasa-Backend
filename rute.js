@@ -3,7 +3,7 @@ var router = express.Router();
 const db = require('./modules/core/server/database/db');
 
 
-//GET ZAHTJEVI
+//                              GET ZAHTJEVI
 router.get('/categories', (req, res) => db.category.findAll().then(category => res.json(category)));
 router.get('/employees', (req, res) => db.employee.findAll().then(employee => res.json(employee)));
 router.get('/orders', (req, res) => db.order.findAll().then(order => res.json(order)));
@@ -20,7 +20,7 @@ router.get('/subTotals/:orderId', (req, res) =>  db.productOrder.findAll({
     where: { orderId: req.params.orderId }}).then( data => { res.send(data)})
 );
 
-// GET /:id ZAHTJEVI
+//                              GET /:id ZAHTJEVI
 
 router.get('/user/:id' , (req, res) =>  db.user.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
@@ -38,6 +38,10 @@ router.get('/category/:id' , (req, res) =>  db.category.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
+router.get('/category/:name' , (req, res) =>  db.category.findOne({
+    where: { name: req.params.name }}).then( data => { res.send(data)})
+);
+
 router.get('/paymentType/:id' , (req, res) =>  db.paymentType.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
@@ -46,7 +50,7 @@ router.get('/order/:id' , (req, res) =>  db.order.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
-//DELETE ZAHTJEVI
+//                              DELETE ZAHTJEVI
 
 router.delete('/user/:id' , (req, res) => db.user.destroy({
         where: {   id: req.params.id     }
@@ -63,7 +67,7 @@ router.delete('/category/:id' , (req, res) => db.category.destroy({
     }).then( () => { res.json({ status : 'Category deleted!'}) })
 );
 
-//POST ZAHTJEVI
+//                              POST ZAHTJEVI
 
 router.post('/user' , function(req, res)  {
     if ( !req.body.username || !req.body.password )
@@ -137,7 +141,7 @@ router.post('/userRole' , function(req, res)  {
             res.sendStatus(500)});
 });
 
-//PUT ZAHTJEVI
+//                              PUT ZAHTJEVI
 
 router.put('/user/:id' , function(req, res)  {
     var data = req.body;

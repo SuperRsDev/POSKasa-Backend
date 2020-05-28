@@ -66,6 +66,15 @@ router.get('/userrole/:username/' , async function(req, res) {
     }
 );
 
+//Dohvati sve produkte određene kategorije
+router.get('/products/:categoryName' , async function(req, res) {
+        const data = await db.sequelize.query('SELECT product.* FROM product, category WHERE product.categoryId = category.id AND category.name = ?', {
+            replacements: [req.params.categoryName], type: db.sequelize.QueryTypes.SELECT
+        });
+        res.send(data);
+    }
+);
+
 //                              DELETE ZAHTJEVI
 
 router.delete('/user/:id' , (req, res) => db.user.destroy({

@@ -75,6 +75,19 @@ router.get('/products/:categoryName' , async function(req, res) {
     }
 );
 
+//pretraga po imenu
+router.get('/products/:name' , async function(req, res) {
+        const data = await db.sequelize.query('SELECT product.* FROM product WHERE product.name = ?', {
+            replacements: [req.params.name], type: db.sequelize.QueryTypes.SELECT
+        });
+        res.send(data);
+    }
+);
+
+//pretraga po cijeni
+
+//pretraga po kategoriji
+
 //                              DELETE ZAHTJEVI
 
 router.delete('/user/:id' , (req, res) => db.user.destroy({

@@ -8,10 +8,10 @@ function getBaseModuleOffsetPath(path) {
     return baseFolderOffsetPath + path;
 }
 
-const sequelize = new Sequelize('dbnrs_pos20', 'root', 'root', {
-    host: 'localhost',
+const sequelize = new Sequelize(config.db.name, config.db.username, config.db.password, {
+host: config.db.host,
     dialect: 'mysql',
-    port: '3308',
+    port: config.db.port,
     pool: {
         max: 5,
         min: 0,

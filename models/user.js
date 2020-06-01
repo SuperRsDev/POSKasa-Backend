@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const bcrypt = require("bcrypt");
 
 module.exports = function(sequelize, DataTypes){
     const User = sequelize.define('user', {
@@ -18,7 +19,7 @@ module.exports = function(sequelize, DataTypes){
         password: {
             type: Sequelize.STRING,
             unique: true,
-            allowNull: false
+            allowNull: false,
         },
         email: Sequelize.STRING,
         phone: Sequelize.STRING,
@@ -28,8 +29,16 @@ module.exports = function(sequelize, DataTypes){
         loginProvider: Sequelize.STRING
     },
     {
-        freezeTableName: true,
-
+        freezeTableName: true
     });
+
+    const encryptPassword = function(user, options) {
+        const hash = bcrypt.hashSync(user.password, 10);
+        user.password = hash;
+    }
+
+    User.beforeCreate(encryptPassword);
+    User.beforeUpdate(encryptPassword);
+
     return User;
 };

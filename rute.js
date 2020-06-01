@@ -62,7 +62,7 @@ baseRouterFn('get', baseCategoriesRoute+ '/:id', (req, res) =>  db.category.find
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
-baseRouterFn('get', baseCategoriesRoute + '/:name', (req, res) =>  db.category.findOne({
+baseRouterFn('get', baseCategoriesRoute + 'for/:name', (req, res) =>  db.category.findOne({
     where: { name: req.params.name }}).then( data => { res.send(data)})
 );
 
@@ -77,7 +77,7 @@ baseRouterFn('get', baseOrdersRoute + '/:id', (req, res) =>  db.order.findOne({
 //GET role for specific user
 //select * from role, user where role.id = user.id and user.username = ?
 
-router.get(baseUserRolesRoute + '/:username/' , async function(req, res) {
+router.get(baseUserRolesRoute + 'for/:username/' , async function(req, res) {
         const data = await db.sequelize.query('SELECT role.name FROM role, userrole, user WHERE userrole.roleId = role.id AND userrole.userId = user.id AND user.username = ?', {
             replacements: [req.params.username], type: db.sequelize.QueryTypes.SELECT
         });
@@ -86,7 +86,7 @@ router.get(baseUserRolesRoute + '/:username/' , async function(req, res) {
 );
 
 //Dohvati sve produkte određene kategorije
-router.get(baseProductsRoute + '/:categoryName' , async function(req, res) {
+router.get(baseProductsRoute + 'for/:categoryName' , async function(req, res) {
         const data = await db.sequelize.query('SELECT product.* FROM product, category WHERE product.categoryId = category.id AND category.name = ?', {
             replacements: [req.params.categoryName], type: db.sequelize.QueryTypes.SELECT
         });
@@ -95,13 +95,6 @@ router.get(baseProductsRoute + '/:categoryName' , async function(req, res) {
 );
 
 //pretraga po imenu
-router.get(baseProductsRoute + '/:name' , async function(req, res) {
-        const data = await db.sequelize.query('SELECT product.* FROM product WHERE product.name = ?', {
-            replacements: [req.params.name], type: db.sequelize.QueryTypes.SELECT
-        });
-        res.send(data);
-    }
-);
 
 //pretraga po cijeni
 
@@ -157,7 +150,6 @@ router.post(baseOrdersRoute, function(req, res)  {
         .catch( function (err) {
             res.sendStatus(500)});
 });
-
 //paymentType - definisano prije - nije podložno izmjenama od strane korisnika
 
 router.post(basePosRoute, function(req, res)  {

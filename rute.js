@@ -134,8 +134,10 @@ router.delete(getIdRoute(baseCategoriesRoute), (req, res) => db.category.destroy
 //                              POST ZAHTJEVI
 
 router.post(baseUsersRoute , function(req, res)  {
-    if ( !req.body.username || !req.body.password )
+    if ( !req.body.username || !req.body.password ){
         res.json({ error: 'Bad Data' })
+        return;
+    }
     const user = req.body;
     user.loginProvider = 'local';
 
@@ -148,8 +150,10 @@ router.post(baseUsersRoute , function(req, res)  {
 });
 
 router.post(baseCategoriesRoute , function(req, res)  {
-    if ( !req.body.name )
+    if ( !req.body.name ){
         res.json({ error: 'Bad Data' })
+        return;
+    }
 
     db.category.create(req.body)
         .then( data => { res.send(data) })
@@ -158,8 +162,10 @@ router.post(baseCategoriesRoute , function(req, res)  {
 });
 
 router.post(baseOrdersRoute, function(req, res)  {
-    if ( !req.body.employeeId || !req.body.date )
+    if ( !req.body.employeeId || !req.body.date ){
         res.json({ error: 'Bad Data' })
+        return;
+    }
 
     db.order.create(req.body)
         .then( data => { res.send(data) })
@@ -176,8 +182,11 @@ router.post(basePosRoute, function(req, res)  {
 });
 
 router.post(baseProductsRoute , function(req, res)  {
-    if ( !req.body.name || !req.body.stockQuantity || !req.body.unitPrice || !req.body.sellingPrice)
+    if ( !req.body.name || !req.body.stockQuantity ||
+        !req.body.unitPrice || !req.body.sellingPrice){
         res.json({ error: 'Bad Data' })
+        return;
+    }
 
     db.product.create(req.body)
         .then( data => { res.send(data) })
@@ -186,8 +195,11 @@ router.post(baseProductsRoute , function(req, res)  {
 });
 
 router.post(baseProductOrdersRoute, function(req, res)  {
-    if ( !req.body.productId || !req.body.orderId || !req.body.quantity )
+    if ( !req.body.productId || !req.body.orderId || !req.body.quantity) {
         res.json({ error: 'Bad Data' })
+        return;
+    }
+
 
     db.productOrder.create(req.body)
         .then( data => { res.send(data) })
@@ -198,8 +210,10 @@ router.post(baseProductOrdersRoute, function(req, res)  {
 //role - definisano prije - nije podložno izmjenama od strane korisnika
 
 router.post(baseUserRolesRoute, function(req, res)  {
-    if ( !req.body.roleId || !req.body.userId )
+    if ( !req.body.roleId || !req.body.userId ){
         res.json({ error: 'Bad Data' })
+        return;
+    }
 
     db.userRole.create(req.body)
         .then( data => { res.send(data) })

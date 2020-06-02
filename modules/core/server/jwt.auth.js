@@ -8,8 +8,11 @@ exports.authenticateToken = (req, res, next) => {
     if (token == null) return res.sendStatus(401) // if there isn't any token
 
     jwt.verify(token, config.jwt.secret, (err, user) => {
-        console.log(err)
-        if (err) return res.sendStatus(403)
+        if (err) {
+            console.error(err);
+            return res.sendStatus(403)
+        }
+
         req.user = user
         next(); // pass the execution off to whatever request the client intended
     })

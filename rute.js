@@ -6,7 +6,7 @@ const db = require('./modules/core/server/database/db');
 const bcrypt = require("bcrypt");
 const jwtAuth = require("./modules/core/server/jwt.auth");
 const config = require('config');
-
+const userService = require('./modules/users/server/service/user.service')
 
 const baseCategoriesRoute = '/categories';
 const baseProductsRoute = '/products';
@@ -23,6 +23,15 @@ const baseRouterFn = (method, route, callback) => {
     router[method](route, jwtAuth.authenticateToken, callback);
 }
 
+const getIdRoute = (route) => {
+    return route + '/:id';
+}
+
+const getUsersExcludedFieldsQuery = (baseQuery) => {
+    return {...baseQuery, attributes: { exclude: ['password'] }}
+}
+
+
 baseRouterFn('get', baseCategoriesRoute, (req, res) => db.category.findAll().then(category => res.json(category)));
 baseRouterFn('get', baseEmployeesRoute, (req, res) => db.employee.findAll().then(employee => res.json(employee)));
 baseRouterFn('get', baseOrdersRoute, (req, res) => db.order.findAll().then(order => res.json(order)));
@@ -31,7 +40,8 @@ baseRouterFn('get', basePosRoute, (req, res) => db.pos.findAll().then(pos => res
 baseRouterFn('get', baseProductsRoute, (req, res) => db.product.findAll().then(product => res.json(product)));
 baseRouterFn('get', baseProductOrdersRoute, (req, res) => db.productOrder.findAll().then(productOrder => res.json(productOrder)));
 baseRouterFn('get', baseRolesRoute, (req, res) => db.role.findAll().then(role => res.json(role)));
-baseRouterFn('get', baseUsersRoute, (req, res) => db.user.findAll().then(user => res.json(user)));
+baseRouterFn('get', baseUsersRoute, (req, res) =>
+    db.user.findAll(getUsersExcludedFieldsQuery({})).then(user => res.json(user)));
 baseRouterFn('get', baseUserRolesRoute, (req, res) => db.userRole.findAll().then(userRole => res.json(userRole)));
 
 //                              GET ZAHTJEVI
@@ -42,23 +52,26 @@ baseRouterFn('get', '/subTotals/:orderId', (req, res) =>  db.productOrder.findAl
 );
 
 //                              GET /:id ZAHTJEVI
-baseRouterFn('get', baseUsersRoute, (req, res) =>  (req, res) =>  db.user.findOne({
+baseRouterFn('get', getIdRoute(baseUsersRoute), (req, res) => {
+    db.user.findOne(getUsersExcludedFieldsQuery({
+            where: { id: req.params.id } })).then( data => { res.send(data)})
+    }
+);
+
+baseRouterFn('get', baseUsersRoute + 'for/:username', (req, res) =>
+    db.user.findOne(getUsersExcludedFieldsQuery({
+    where: {   username: req.params.username }})).then( data => { res.send(data)})
+);
+
+baseRouterFn('get', getIdRoute(baseEmployeesRoute), (req, res) =>  db.employee.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
-baseRouterFn('get', baseUsersRoute + '/:username/:password', (req, res) =>  db.user.findOne({
-    where: {   username: req.params.username, password: req.params.password }}).then( data => { res.send(data)})
-);
-
-baseRouterFn('get', baseEmployeesRoute + '/:id', (req, res) =>  db.employee.findOne({
+baseRouterFn('get', getIdRoute(baseProductsRoute), (req, res) =>  db.product.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
-baseRouterFn('get', baseProductsRoute + '/:id', (req, res) =>  db.product.findOne({
-    where: { id: req.params.id }}).then( data => { res.send(data)})
-);
-
-baseRouterFn('get', baseCategoriesRoute+ '/:id', (req, res) =>  db.category.findOne({
+baseRouterFn('get', getIdRoute(baseCategoriesRoute), (req, res) =>  db.category.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
@@ -66,11 +79,11 @@ baseRouterFn('get', baseCategoriesRoute + 'for/:name', (req, res) =>  db.categor
     where: { name: req.params.name }}).then( data => { res.send(data)})
 );
 
-baseRouterFn('get', basePaymentTypesRoute + '/:id', (req, res) =>  db.paymentType.findOne({
+baseRouterFn('get', getIdRoute(basePaymentTypesRoute), (req, res) =>  db.paymentType.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
-baseRouterFn('get', baseOrdersRoute + '/:id', (req, res) =>  db.order.findOne({
+baseRouterFn('get', getIdRoute(baseOrdersRoute), (req, res) =>  db.order.findOne({
     where: { id: req.params.id }}).then( data => { res.send(data)})
 );
 
@@ -78,7 +91,8 @@ baseRouterFn('get', baseOrdersRoute + '/:id', (req, res) =>  db.order.findOne({
 //select * from role, user where role.id = user.id and user.username = ?
 
 router.get(baseUserRolesRoute + 'for/:username/' , async function(req, res) {
-        const data = await db.sequelize.query('SELECT role.name FROM role, userrole, user WHERE userrole.roleId = role.id AND userrole.userId = user.id AND user.username = ?', {
+        const data = await db.sequelize
+            .query('SELECT role.* FROM role, userrole, user WHERE userrole.roleId = role.id AND userrole.userId = user.id AND user.username = ?', {
             replacements: [req.params.username], type: db.sequelize.QueryTypes.SELECT
         });
         res.send(data);
@@ -102,17 +116,17 @@ router.get(baseProductsRoute + 'for/:categoryName' , async function(req, res) {
 
 //                              DELETE ZAHTJEVI
 
-router.delete(baseUsersRoute + '/:id' , (req, res) => db.user.destroy({
+router.delete(getIdRoute(baseUsersRoute), (req, res) => db.user.destroy({
         where: {   id: req.params.id     }
     }).then( () => { res.json({ status : 'User deleted!'}) })
 );
 
-router.delete(baseProductsRoute + '/:id' , (req, res) => db.product.destroy({
+router.delete(getIdRoute(baseProductsRoute), (req, res) => db.product.destroy({
         where: {   id: req.params.id     }
     }).then( () => { res.json({ status : 'Product deleted!'}) })
 );
 
-router.delete(baseCategoriesRoute + '/:id' , (req, res) => db.category.destroy({
+router.delete(getIdRoute(baseCategoriesRoute), (req, res) => db.category.destroy({
         where: {   id: req.params.id     }
     }).then( () => { res.json({ status : 'Category deleted!'}) })
 );
@@ -126,7 +140,9 @@ router.post(baseUsersRoute , function(req, res)  {
     user.loginProvider = 'local';
 
     db.user.create(req.body)
-        .then( data => { res.send(data) })
+        .then( data => {
+            const normalizedUser = userService.mapUserToDto(data);
+            res.send(normalizedUser) })
         .catch( function (err) {
             res.sendStatus(500)});
 });
@@ -188,6 +204,7 @@ router.post(baseUserRolesRoute, function(req, res)  {
     db.userRole.create(req.body)
         .then( data => { res.send(data) })
         .catch( function (err) {
+            console.error(err);
             res.sendStatus(500)});
 });
 
@@ -229,6 +246,7 @@ router.post('/token', (req, res) => {
         res.json({ error: 'Bad Data' })
         return;
     }
+
     db.user.findOne({
             where: {
                 username: req.body.username
@@ -246,7 +264,8 @@ router.post('/token', (req, res) => {
                 const token = jwtAuth.generateAccessToken({ username: req.body.username });
                 res.json({
                     token,
-                    expiresIn: config.jwt.expiresIn
+                    expiresIn: config.jwt.expiresIn,
+                    username: req.body.username
                 });
             } else {
                 // Passwords don't match

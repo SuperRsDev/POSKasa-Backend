@@ -24,9 +24,15 @@ module.exports = function(sequelize, DataTypes){
         email: Sequelize.STRING,
         phone: Sequelize.STRING,
         address: Sequelize.STRING,
-        picture: Sequelize.STRING,
+        picture: {
+            type: Sequelize.STRING,
+            defaultValue: "user.png"
+        },
         birthDate: Sequelize.DATE,
-        loginProvider: Sequelize.STRING
+        loginProvider: {
+            type: Sequelize.STRING,
+            defaultValue: "local"
+        }
     },
     {
         freezeTableName: true

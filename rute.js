@@ -133,7 +133,7 @@ baseRouterFn('delete', getIdRoute(baseCategoriesRoute), (req, res) => db.categor
 
 //                              POST ZAHTJEVI
 
-baseRouterFn('post', baseUsersRoute , function(req, res)  {
+router.post(baseUsersRoute , function(req, res)  {
     if ( !req.body.username || !req.body.password ){
         res.json({ error: 'Bad Data' })
         return;

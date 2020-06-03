@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes){
         address: Sequelize.STRING,
         picture: {
             type: Sequelize.STRING,
-            defaultValue: "user.png"
+            defaultValue: "file:/C:/Users/User/Desktop/OSTALE/20170704_232121.jpg"
         },
         birthDate: Sequelize.DATE,
         loginProvider: {

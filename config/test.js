@@ -1,4 +1,4 @@
-{
+module.exports = {
     "db": {
         "name": "NRS20_TEST",
         "username": "root",

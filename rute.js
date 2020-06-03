@@ -144,9 +144,21 @@ router.post(baseUsersRoute , function(req, res)  {
     db.user.create(req.body)
         .then( data => {
             const normalizedUser = userService.mapUserToDto(data);
-            res.send(normalizedUser) })
+            db.employee.create({
+                userId: data.id,
+                managerId: null,
+                hireDate: new Date(),
+                jobTitle: 'Radnik'
+            })
+                .then((employeeCreated) => {
+                    res.send(normalizedUser) })
+            }).catch((err) => {
+                res.sendStatus(500)
+            })
+
         .catch( function (err) {
-            res.sendStatus(500)});
+            res.sendStatus(500)
+        });
 });
 
 baseRouterFn('post', baseCategoriesRoute , function(req, res)  {
@@ -170,6 +182,7 @@ baseRouterFn('post', baseOrdersRoute, function(req, res)  {
     db.order.create(req.body)
         .then( data => { res.send(data) })
         .catch( function (err) {
+            console.error(err);
             res.sendStatus(500)});
 });
 //paymentType - definisano prije - nije podložno izmjenama od strane korisnika
@@ -181,7 +194,7 @@ baseRouterFn('post', basePosRoute, function(req, res)  {
             res.sendStatus(500)});
 });
 
-baseRouterFn('post',baseProductsRoute , function(req, res)  {
+baseRouterFn('post', baseProductsRoute , function(req, res)  {
     if ( !req.body.name || !req.body.stockQuantity ||
         !req.body.unitPrice || !req.body.sellingPrice){
         res.json({ error: 'Bad Data' })
@@ -201,10 +214,16 @@ baseRouterFn('post', baseProductOrdersRoute, function(req, res)  {
     }
 
 
-    db.productOrder.create(req.body)
+    db.productOrder.create({
+        productId: req.body.productId,
+        orderId: req.body.orderId,
+        quantity: req.body.quantity
+    })
         .then( data => { res.send(data) })
         .catch( function (err) {
-            res.sendStatus(500)});
+            console.info(err);
+            res.sendStatus(500);
+        });
 });
 
 //role - definisano prije - nije podložno izmjenama od strane korisnika
@@ -267,33 +286,31 @@ const postTokenCbk = (req, res) => {
             username: req.body.username
         }
     })
-        .then( user => {
-            if (!user) {
-                res.status(400).send({ error: "Bad request, one or more fields has incorrect value" });
-                return;
-            }
+    .then( user => {
+        if (!user) {
+            res.status(400).send({ error: "Bad request, one or more fields has incorrect value" });
+            return;
+        }
 
-            const samePassword = bcrypt.compareSync(req.body.password, user.password);
-            if(samePassword) {
-                // Passwords match
-                const token = jwtAuth.generateAccessToken({ username: req.body.username });
-                res.json({
-                    token,
-                    expiresIn: config.jwt.expiresIn,
-                    username: req.body.username,
-                    userId: user.id
-                });
-            } else {
-                // Passwords don't match
-                res.status(400).send({ error: "Bad request, one or more fields has incorrect value" });
-            }
-        })
-        .catch( function (err) {
-            console.error(err);
-            res.sendStatus(500)
-        });
-
-    // ...
+        const samePassword = bcrypt.compareSync(req.body.password, user.password);
+        if(samePassword) {
+            // Passwords match
+            const token = jwtAuth.generateAccessToken({ username: req.body.username });
+            res.json({
+                token,
+                expiresIn: config.jwt.expiresIn,
+                username: req.body.username,
+                userId: user.id
+            });
+        } else {
+            // Passwords don't match
+            res.status(400).send({ error: "Bad request, one or more fields has incorrect value" });
+        }
+    })
+    .catch( function (err) {
+        console.error(err);
+        res.sendStatus(500)
+    });
 }
 router.post('/token', postTokenCbk);
 

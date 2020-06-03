@@ -1,8 +1,8 @@
 exports.inicializacijaVeza = function inicializacijaVeza(db){
 
     //veza više-na-više između tabela product i order preko tabele productOrder
-    db.product.belongsToMany(db.order, { through: db.productOrder , foreignKey: 'orderId', onDelete: 'cascade'});
-    db.order.belongsToMany(db.product, { through: db.productOrder, foreignKey: 'productId', onDelete: 'cascade' });
+    db.product.belongsToMany(db.order, { through: db.productOrder , foreignKey: 'productId', onDelete: 'cascade'});
+    db.order.belongsToMany(db.product, { through: db.productOrder, foreignKey: 'orderId', onDelete: 'cascade' });
 
     //product i category tabele imaju vezu 1:1
     db.category.hasOne(db.product, {as: 'categoryId', foreignKey: 'categoryId', onDelete: 'cascade'});

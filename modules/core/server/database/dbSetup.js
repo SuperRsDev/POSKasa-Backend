@@ -27,7 +27,7 @@ function inicializacija() {
             email: 'apozegija1@etf.unsa.ba',
             phone: '061111111',
             address: 'Zmaja od Bosne bb',
-            picture: 'user.png',
+            picture: '@../img/user.png',
             birthDate: '1997-02-03',
             loginProvider: 'local'
         })

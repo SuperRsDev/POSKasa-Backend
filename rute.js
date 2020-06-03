@@ -90,7 +90,7 @@ baseRouterFn('get', getIdRoute(baseOrdersRoute), (req, res) =>  db.order.findOne
 //GET role for specific user
 //select * from role, user where role.id = user.id and user.username = ?
 
-router.get(baseUserRolesRoute + 'for/:username/' , async function(req, res) {
+baseRouterFn('get', baseUserRolesRoute + 'for/:username/' , async function(req, res) {
         const data = await db.sequelize
             .query('SELECT role.* FROM role, userrole, user WHERE userrole.roleId = role.id AND userrole.userId = user.id AND user.username = ?', {
             replacements: [req.params.username], type: db.sequelize.QueryTypes.SELECT
@@ -100,7 +100,7 @@ router.get(baseUserRolesRoute + 'for/:username/' , async function(req, res) {
 );
 
 //Dohvati sve produkte određene kategorije
-router.get(baseProductsRoute + 'for/:categoryName' , async function(req, res) {
+baseRouterFn('get', baseProductsRoute + 'for/:categoryName' , async function(req, res) {
         const data = await db.sequelize.query('SELECT product.* FROM product, category WHERE product.categoryId = category.id AND category.name = ?', {
             replacements: [req.params.categoryName], type: db.sequelize.QueryTypes.SELECT
         });
@@ -116,24 +116,24 @@ router.get(baseProductsRoute + 'for/:categoryName' , async function(req, res) {
 
 //                              DELETE ZAHTJEVI
 
-router.delete(getIdRoute(baseUsersRoute), (req, res) => db.user.destroy({
+baseRouterFn('delete', getIdRoute(baseUsersRoute), (req, res) => db.user.destroy({
         where: {   id: req.params.id     }
     }).then( () => { res.json({ status : 'User deleted!'}) })
 );
 
-router.delete(getIdRoute(baseProductsRoute), (req, res) => db.product.destroy({
+baseRouterFn('delete', getIdRoute(baseProductsRoute), (req, res) => db.product.destroy({
         where: {   id: req.params.id     }
     }).then( () => { res.json({ status : 'Product deleted!'}) })
 );
 
-router.delete(getIdRoute(baseCategoriesRoute), (req, res) => db.category.destroy({
+baseRouterFn('delete', getIdRoute(baseCategoriesRoute), (req, res) => db.category.destroy({
         where: {   id: req.params.id     }
     }).then( () => { res.json({ status : 'Category deleted!'}) })
 );
 
 //                              POST ZAHTJEVI
 
-router.post(baseUsersRoute , function(req, res)  {
+baseRouterFn('post', baseUsersRoute , function(req, res)  {
     if ( !req.body.username || !req.body.password ){
         res.json({ error: 'Bad Data' })
         return;
@@ -149,7 +149,7 @@ router.post(baseUsersRoute , function(req, res)  {
             res.sendStatus(500)});
 });
 
-router.post(baseCategoriesRoute , function(req, res)  {
+baseRouterFn('post', baseCategoriesRoute , function(req, res)  {
     if ( !req.body.name ){
         res.json({ error: 'Bad Data' })
         return;
@@ -161,7 +161,7 @@ router.post(baseCategoriesRoute , function(req, res)  {
             res.sendStatus(500)});
 });
 
-router.post(baseOrdersRoute, function(req, res)  {
+baseRouterFn('post', baseOrdersRoute, function(req, res)  {
     if ( !req.body.employeeId || !req.body.date ){
         res.json({ error: 'Bad Data' })
         return;
@@ -174,14 +174,14 @@ router.post(baseOrdersRoute, function(req, res)  {
 });
 //paymentType - definisano prije - nije podložno izmjenama od strane korisnika
 
-router.post(basePosRoute, function(req, res)  {
+baseRouterFn('post', basePosRoute, function(req, res)  {
     db.pos.create(req.body)
         .then( data => { res.send(data) })
         .catch( function (err) {
             res.sendStatus(500)});
 });
 
-router.post(baseProductsRoute , function(req, res)  {
+baseRouterFn('post',baseProductsRoute , function(req, res)  {
     if ( !req.body.name || !req.body.stockQuantity ||
         !req.body.unitPrice || !req.body.sellingPrice){
         res.json({ error: 'Bad Data' })
@@ -194,7 +194,7 @@ router.post(baseProductsRoute , function(req, res)  {
             res.sendStatus(500)});
 });
 
-router.post(baseProductOrdersRoute, function(req, res)  {
+baseRouterFn('post', baseProductOrdersRoute, function(req, res)  {
     if ( !req.body.productId || !req.body.orderId || !req.body.quantity) {
         res.json({ error: 'Bad Data' })
         return;
@@ -209,7 +209,7 @@ router.post(baseProductOrdersRoute, function(req, res)  {
 
 //role - definisano prije - nije podložno izmjenama od strane korisnika
 
-router.post(baseUserRolesRoute, function(req, res)  {
+baseRouterFn('post', baseUserRolesRoute, function(req, res)  {
     if ( !req.body.roleId || !req.body.userId ){
         res.json({ error: 'Bad Data' })
         return;
@@ -223,49 +223,50 @@ router.post(baseUserRolesRoute, function(req, res)  {
 });
 
 //                              PUT ZAHTJEVI
-
-router.put(baseUsersRoute + '/:id' , function(req, res)  {
+const postUserCbk = function(req, res)  {
     var data = req.body;
     db.user.update( {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        username: data.username,
-        password: data.password,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        picture: data.picture,
-        birthDate: data.birthDate,
-        loginProvider: data.loginProvider,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            username: data.username,
+            password: data.password,
+            email: data.email,
+            phone: data.phone,
+            address: data.address,
+            picture: data.picture,
+            birthDate: data.birthDate,
+            loginProvider: data.loginProvider,
         }, { where: { id: req.params.id } }
     ).then( () => { res.json({ status : 'User updated!'}) });
-});
+}
+baseRouterFn('put', getIdRoute(baseUsersRoute), postUserCbk);
 
-router.put(baseProductsRoute + '/:id' , function(req, res)  {
+const postProductCbk = function(req, res)  {
     var data = req.body;
     db.product.update( {
-        name: data.name,
-        stockQuantity: data.stockQuantity,
-        status: data.status,
-        description: data.description,
-        unitPrice: data.unitPrice,
-        sellingPrice: data.sellingPrice,
-        categoryId: data.categoryId,
+            name: data.name,
+            stockQuantity: data.stockQuantity,
+            status: data.status,
+            description: data.description,
+            unitPrice: data.unitPrice,
+            sellingPrice: data.sellingPrice,
+            categoryId: data.categoryId,
         }, { where: { id: req.params.id } }
     ).then( () => { res.json({ status : 'Product updated!'}) });
-});
+}
+baseRouterFn('put', getIdRoute(baseProductsRoute), postProductCbk);
 
-router.post('/token', (req, res) => {
+const postTokenCbk = (req, res) => {
     if (!req.body.username || !req.body.password) {
         res.json({ error: 'Bad Data' })
         return;
     }
 
     db.user.findOne({
-            where: {
-                username: req.body.username
-            }
-        })
+        where: {
+            username: req.body.username
+        }
+    })
         .then( user => {
             if (!user) {
                 res.status(400).send({ error: "Bad request, one or more fields has incorrect value" });
@@ -279,7 +280,8 @@ router.post('/token', (req, res) => {
                 res.json({
                     token,
                     expiresIn: config.jwt.expiresIn,
-                    username: req.body.username
+                    username: req.body.username,
+                    userId: user.id
                 });
             } else {
                 // Passwords don't match
@@ -292,6 +294,7 @@ router.post('/token', (req, res) => {
         });
 
     // ...
-});
+}
+router.post('/token', postTokenCbk);
 
 module.exports = router;

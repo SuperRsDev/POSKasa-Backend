@@ -21,7 +21,7 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.use('/api', pos);
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
     dbSetup.sinhronizacija();
     console.log(`Aplikacija pokrenuta na ${port}!`)

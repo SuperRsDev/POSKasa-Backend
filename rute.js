@@ -91,22 +91,32 @@ baseRouterFn('get', getIdRoute(baseOrdersRoute), (req, res) =>  db.order.findOne
 //select * from role, user where role.id = user.id and user.username = ?
 
 baseRouterFn('get', baseUserRolesRoute + 'for/:username/' , async function(req, res) {
-        const data = await db.sequelize
-            .query('SELECT role.* FROM role, userrole, user WHERE userrole.roleId = role.id AND userrole.userId = user.id AND user.username = ?', {
-            replacements: [req.params.username], type: db.sequelize.QueryTypes.SELECT
-        });
-        res.send(data);
+        try {
+            //SELECT role.* FROM role, "userRole" as localrole, user as localuser WHERE localrole."roleId" = role.id AND localrole."userId" = localuser.id AND localuser.username = 'dmuharemov1'
+            const data = await db.sequelize
+                .query('SELECT role.* FROM role, "userRole" as localrole, "user" as localuser WHERE localrole."roleId" = role.id AND localrole."userId" = localuser.id AND localuser.username = ?', {
+                    replacements: [req.params.username], type: db.sequelize.QueryTypes.SELECT
+                });
+            res.send(data);
+        } catch (err) {
+            console.error("User roles error: ", err);
+            res.sendStatus(500);
+        }
     }
 );
 
 //Dohvati sve produkte određene kategorije
 baseRouterFn('get', baseProductsRoute + 'for/:categoryName' , async function(req, res) {
-        const data = await db.sequelize.query('SELECT product.* FROM product, category WHERE product.categoryId = category.id AND category.name = ?', {
+    try {
+        const data = await db.sequelize.query('SELECT product.* FROM product, category WHERE product."categoryId" = category.id AND category.name = ?', {
             replacements: [req.params.categoryName], type: db.sequelize.QueryTypes.SELECT
         });
         res.send(data);
+    } catch (err) {
+        console.error('Products category error: ', err);
+        res.sendStatus(500);
     }
-);
+});
 
 //pretraga po imenu
 

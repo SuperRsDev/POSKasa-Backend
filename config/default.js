@@ -4,7 +4,8 @@ module.exports = {
         "username": process.env.DB_USERNAME ? process.env.DB_USERNAME :"root",
         "password": process.env.DB_PASSWORD ? process.env.DB_PASSWORD :"123az45AZ!",
         "host": process.env.DB_HOST ? process.env.DB_HOST :"localhost",
-        "port": process.env.DB_PORT ? process.env.DB_PORT :"3306"
+        "port": process.env.DB_PORT ? process.env.DB_PORT :"3306",
+        "dialect": process.env.DB_DIALECT ? process.env.DB_DIALECT :"postgres"
     },
     "jwt": {
         "secret": process.env.JWT_SECRET ? process.env.JWT_SECRET : "12345678dasdpaskdoaskmod0kasodmMSWDAODpoASdsa5sa4548dsa",

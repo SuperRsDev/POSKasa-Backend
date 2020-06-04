@@ -8,7 +8,7 @@ module.exports = {
     },
     "jwt": {
         "secret": process.env.JWT_SECRET ? process.env.JWT_SECRET : "12345678dasdpaskdoaskmod0kasodmMSWDAODpoASdsa5sa4548dsa",
-        "expiresIn": 180000
+        "expiresIn": process.env.JWT_EXPIRES ? process.env.JWT_EXPIRES : 180000
     },
     "host": {
         "port": "8080",

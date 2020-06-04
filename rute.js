@@ -153,10 +153,12 @@ router.post(baseUsersRoute , function(req, res)  {
                 .then((employeeCreated) => {
                     res.send(normalizedUser) })
             }).catch((err) => {
+                console.error('Employee create error: ', err);
                 res.sendStatus(500)
             })
 
         .catch( function (err) {
+            console.error('User create error: ', err);
             res.sendStatus(500)
         });
 });

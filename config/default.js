@@ -1,13 +1,13 @@
 module.exports = {
     "db": {
-        "name": "db_nrs_pos20",
-        "username": "root",
-        "password": "123az45AZ!",
-        "host": "localhost",
-        "port": "3306"
+        "name": process.env.DB_NAME ? process.env.DB_NAME : "db_nrs_pos20",
+        "username": process.env.DB_USERNAME ? process.env.DB_USERNAME :"root",
+        "password": process.env.DB_PASSWORD ? process.env.DB_PASSWORD :"123az45AZ!",
+        "host": process.env.DB_HOST ? process.env.DB_HOST :"localhost",
+        "port": process.env.DB_PORT ? process.env.DB_PORT :"3306"
     },
     "jwt": {
-        "secret": "12345678dasdpaskdoaskmod0kasodmMSWDAODpoASdsa5sa4548dsa",
+        "secret": process.env.JWT_SECRET ? process.env.JWT_SECRET : "12345678dasdpaskdoaskmod0kasodmMSWDAODpoASdsa5sa4548dsa",
         "expiresIn": 180000
     },
     "host": {
